@@ -1,3 +1,17 @@
 import libs = libmicrosoft-pdb%lib{microsoft-pdb}
 
 exe{driver}: {hxx cxx}{**} $libs testscript{**}
+
+# The upstream headers use Microsoft extensions (the __intN types, nameless
+# structs and unions, zero-length arrays, enumerators outside of the int
+# range, and #pragma warning) that Clang and GCC warn about in the pedantic
+# mode. MSVC warns about the nameless structs at /W4.
+#
+if ($cxx.id == 'clang' || $cxx.id == 'msvc-clang')
+  cxx.coptions += -Wno-language-extension-token -Wno-gnu-anonymous-struct \
+                  -Wno-nested-anon-types -Wno-c99-extensions             \
+                  -Wno-microsoft-enum-value
+elif ($cxx.id == 'gcc')
+  cxx.coptions += -Wno-pedantic -Wno-unknown-pragmas
+elif ($cxx.id == 'msvc')
+  cxx.coptions += /wd4201
