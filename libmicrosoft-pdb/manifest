@@ -1,6 +1,6 @@
 : 1
 name: libmicrosoft-pdb
-version: 2023.4.27-a.0.z
+version: 2023.4.27
 upstream-version: 20230427
 type: lib,binless
 language: c++
